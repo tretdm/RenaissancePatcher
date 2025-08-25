@@ -73,14 +73,14 @@ DWORD WINAPI mainHakVzlom() {
     {
         HKEY hKey = nullptr;
         const wchar_t* regPatch = L"SOFTWARE\\Renaissance";
-        // получаем доступ к реестру
-        if (RegOpenKeyW(HKEY_CURRENT_USER, regPatch, &hKey) != ERROR_SUCCESS) {
+		// получаем доступ к реестру (при отсутствии ключа - создаём его) 
+        if (RegCreateKeyW(HKEY_CURRENT_USER, regPatch, &hKey) != ERROR_SUCCESS) {
             MessageBoxA(nullptr, "Не удалось получить доступ к Реестру", "Критическая ошибка Renaissance Injector", MB_OK | MB_ICONERROR);
             RegCloseKey(hKey);
         }
         else 
         {
-            // буфер для домена прото
+            // буфер для домена протокола
             DWORD dwType = REG_SZ;
             wchar_t buf[255] = { 0 };
             DWORD dwBufSize = sizeof(buf);
