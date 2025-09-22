@@ -24,6 +24,7 @@
     <ProjectGuid>{00659c4a-4747-4f43-9b13-8a799c338a24}</ProjectGuid>
     <RootNamespace>RenaissanceInjector</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <ProjectName>RenaissancePatch</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Inj|Win32'" Label="Configuration">

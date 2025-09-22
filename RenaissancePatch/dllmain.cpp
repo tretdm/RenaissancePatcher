@@ -15,7 +15,7 @@
 #if defined _M_IX86
 #pragma comment(lib, "MinHook.x86.lib")
 #else
-#error RenaissanceInjector does not support any other architecture except for x86 (Win32)
+#error RenaissancePatch does not support any other architecture except for x86 (Win32)
 #endif
 
 char* MrimProtocolDomain;
@@ -54,19 +54,19 @@ __declspec(dllexport) DWORD WINAPI mainHakVzlom();
 DWORD WINAPI mainHakVzlom() {
     if (MH_Initialize() != MH_OK)
     {
-        MessageBoxA(nullptr, "Не получилось проинициализировать работу с библиотекой MinHook", "Критическая ошибка Renaissance Injector", MB_OK | MB_ICONERROR);
+        MessageBoxA(nullptr, "Не получилось проинициализировать работу с библиотекой MinHook", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
 
     if (MH_CreateHookApiEx(L"ws2_32", "gethostbyname", &hijackedgethostbyname, reinterpret_cast<LPVOID*>(&oggethostbyname), nullptr) != MH_OK)
     {
-        MessageBoxA(nullptr, "Не получилось найти нужную функцию из программы", "Критическая ошибка Renaissance Injector", MB_OK | MB_ICONERROR);
+        MessageBoxA(nullptr, "Не получилось найти нужную функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
 
     if (MH_EnableHook(&gethostbyname) != MH_OK)
     {
-        MessageBoxA(nullptr, "Не получилось перехватить функцию из программы", "Критическая ошибка Renaissance Injector", MB_OK | MB_ICONERROR);
+        MessageBoxA(nullptr, "Не получилось перехватить функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
     else 
@@ -75,7 +75,7 @@ DWORD WINAPI mainHakVzlom() {
         const wchar_t* regPatch = L"SOFTWARE\\Renaissance";
 		// получаем доступ к реестру (при отсутствии ключа - создаём его) 
         if (RegCreateKeyW(HKEY_CURRENT_USER, regPatch, &hKey) != ERROR_SUCCESS) {
-            MessageBoxA(nullptr, "Не удалось получить доступ к Реестру", "Критическая ошибка Renaissance Injector", MB_OK | MB_ICONERROR);
+            MessageBoxA(nullptr, "Не удалось получить доступ к Реестру", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
             RegCloseKey(hKey);
         }
         else 
@@ -102,7 +102,7 @@ DWORD WINAPI mainHakVzlom() {
                 MrimProtocolDomain = (char*)DEFAULT_DOMAIN;
                 MrimAvatarsDomain = (char*)DEFAULT_AVATAR_DOMAIN;
                 // юзера уведомляем
-                MessageBoxA(nullptr, "Похоже, вы установили инджектор ручным способом. Отредактируйте параметры на соответствующие вашим в Редакторе Реестра по адресу HKCU/SOFTWARE/Renaissance", "Renaissance Injector", MB_OK | MB_ICONINFORMATION);
+                MessageBoxA(nullptr, "Похоже, вы установили инджектор ручным способом. Отредактируйте параметры на соответствующие вашим в Редакторе Реестра по адресу HKCU/SOFTWARE/Renaissance", "Renaissance Patch", MB_OK | MB_ICONINFORMATION);
             }
             memset(buf, 0, sizeof(buf));
 
@@ -128,7 +128,7 @@ DWORD WINAPI mainHakVzlom() {
                 if (FirstTime == 1) {
                     FirstTime = 0;
                     RegSetValueExW(hKey, L"FirstTime", 0, REG_DWORD, reinterpret_cast<const BYTE*>(&FirstTime), sizeof(FirstTime));
-                    MessageBoxA(nullptr, "Если вы видите это сообщение - поздравляем, патч сработал!\n\nНастроить его можно с помощью Renaissance Patcher.", "Renaissance Injector", MB_OK | MB_ICONINFORMATION);
+                    MessageBoxA(nullptr, "Если вы видите это сообщение - поздравляем, патч сработал!\n\nНастроить его можно с помощью Renaissance Patcher.", "Renaissance Patch", MB_OK | MB_ICONINFORMATION);
                 }
             }
 
