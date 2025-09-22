@@ -44,11 +44,7 @@ link_directories(
 add_library(RenaissancePatch SHARED ${SOURCES})
 
 # Link MinHook and ws2_32
-if(MINGW)
-    target_link_libraries(RenaissancePatch MinHook.x86 ws2_32)
-else()
-    target_link_libraries(RenaissancePatch MinHook.x86.lib ws2_32)
-endif()
+target_link_libraries(RenaissancePatch MinHook.MinGW ws2_32)
 
 # Output directories
 set_target_properties(RenaissancePatch PROPERTIES
