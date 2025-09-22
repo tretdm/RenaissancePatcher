@@ -58,13 +58,13 @@ DWORD WINAPI mainHakVzlom() {
         return 1;
     }
 
-    if (MH_CreateHookApiEx(L"ws2_32", "gethostbyname", &hijackedgethostbyname, reinterpret_cast<LPVOID*>(&oggethostbyname), nullptr) != MH_OK)
+    if (MH_CreateHookApiEx(L"ws2_32", "gethostbyname", reinterpret_cast<LPVOID>(&hijackedgethostbyname), reinterpret_cast<LPVOID*>(&oggethostbyname), nullptr) != MH_OK)
     {
         MessageBoxA(nullptr, "Не получилось найти нужную функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
 
-    if (MH_EnableHook(&gethostbyname) != MH_OK)
+    if (MH_EnableHook(reinterpret_cast<LPVOID>(&gethostbyname)) != MH_OK)
     {
         MessageBoxA(nullptr, "Не получилось перехватить функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
@@ -85,7 +85,7 @@ DWORD WINAPI mainHakVzlom() {
             wchar_t buf[255] = { 0 };
             DWORD dwBufSize = sizeof(buf);
             // сначала грузим настройки
-            if (RegQueryValueEx(hKey, L"MrimDomain", 0, &dwType, (LPBYTE)buf, &dwBufSize) == ERROR_SUCCESS)
+            if (RegQueryValueExA(hKey, "MrimDomain", 0, &dwType, (LPBYTE)buf, &dwBufSize) == ERROR_SUCCESS)
             {
                 // совершенно не безопасно, но функция в if и так защищает от переполнения буфера (выдаст ошибку, если буфер милипиздрический)
                 MrimProtocolDomain = WideToChar(buf);
@@ -109,7 +109,7 @@ DWORD WINAPI mainHakVzlom() {
             // буфер для домена авок
             wchar_t bufAva[255] = { 0 };
             DWORD dwAvaBufSize = sizeof(buf);
-            if (RegQueryValueEx(hKey, L"MrimAvatarDomain", 0, &dwType, (LPBYTE)bufAva, &dwAvaBufSize) == ERROR_SUCCESS)
+            if (RegQueryValueExA(hKey, "MrimAvatarDomain", 0, &dwType, (LPBYTE)bufAva, &dwAvaBufSize) == ERROR_SUCCESS)
             {
                 MrimAvatarsDomain = WideToChar(bufAva);
             }
@@ -123,7 +123,7 @@ DWORD WINAPI mainHakVzlom() {
             DWORD FirstTime = 0;
             DWORD FTType = REG_DWORD;
             DWORD FTLen = (DWORD)sizeof(FirstTime);
-            if (RegQueryValueEx(hKey, L"FirstTime", 0, &FTType, (BYTE*)&FirstTime, &FTLen) == ERROR_SUCCESS)
+            if (RegQueryValueExA(hKey, "FirstTime", 0, &FTType, (BYTE*)&FirstTime, &FTLen) == ERROR_SUCCESS)
             {
                 if (FirstTime == 1) {
                     FirstTime = 0;
