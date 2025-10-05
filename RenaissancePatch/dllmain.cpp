@@ -24,7 +24,7 @@ char* MrimAvatarsDomain;
 typedef hostent* (WSAAPI *GETHOSTBYNAME)(const char* name);
 
 // поинтер для оригинального gethostbyname
-GETHOSTBYNAME oggethostbyname = nullptr;
+GETHOSTBYNAME oggethostbyname = NULL;
 
 // вот здесь мы делаем тёмные делишки 🔥
 static hostent* WSAAPI hijackedgethostbyname(const char* name) {
@@ -38,13 +38,13 @@ static hostent* WSAAPI hijackedgethostbyname(const char* name) {
 }
 
 char* WideToChar(const wchar_t* wideStr) {
-    if (!wideStr) return nullptr;
+    if (!wideStr) return NULL;
 
-    int size = WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, nullptr, 0, nullptr, nullptr);
-    if (size == 0) return nullptr;
+    int size = WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, NULL, 0, NULL, NULL);
+    if (size == 0) return NULL;
 
     char* buffer = new char[size];
-    WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, buffer, size, nullptr, nullptr);
+    WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, buffer, size, NULL, NULL);
     return buffer;
 }
 
@@ -54,28 +54,28 @@ __declspec(dllexport) DWORD WINAPI mainHakVzlom();
 DWORD WINAPI mainHakVzlom() {
     if (MH_Initialize() != MH_OK)
     {
-        MessageBoxA(nullptr, "Не получилось проинициализировать работу с библиотекой MinHook", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
+        MessageBoxA(NULL, "Не получилось проинициализировать работу с библиотекой MinHook", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
 
-    if (MH_CreateHookApiEx(L"ws2_32", "gethostbyname", reinterpret_cast<LPVOID>(&hijackedgethostbyname), reinterpret_cast<LPVOID*>(&oggethostbyname), nullptr) != MH_OK)
+    if (MH_CreateHookApiEx(L"ws2_32", "gethostbyname", reinterpret_cast<LPVOID>(&hijackedgethostbyname), reinterpret_cast<LPVOID*>(&oggethostbyname), NULL) != MH_OK)
     {
-        MessageBoxA(nullptr, "Не получилось найти нужную функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
+        MessageBoxA(NULL, "Не получилось найти нужную функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
 
     if (MH_EnableHook(reinterpret_cast<LPVOID>(&gethostbyname)) != MH_OK)
     {
-        MessageBoxA(nullptr, "Не получилось перехватить функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
+        MessageBoxA(NULL, "Не получилось перехватить функцию из программы", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
         return 1;
     }
     else 
     {
-        HKEY hKey = nullptr;
+        HKEY hKey = NULL;
         const wchar_t* regPatch = L"SOFTWARE\\Renaissance";
 		// получаем доступ к реестру (при отсутствии ключа - создаём его) 
         if (RegCreateKeyW(HKEY_CURRENT_USER, regPatch, &hKey) != ERROR_SUCCESS) {
-            MessageBoxA(nullptr, "Не удалось получить доступ к Реестру", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
+            MessageBoxA(NULL, "Не удалось получить доступ к Реестру", "Критическая ошибка Renaissance Patch", MB_OK | MB_ICONERROR);
             RegCloseKey(hKey);
         }
         else 
@@ -102,7 +102,7 @@ DWORD WINAPI mainHakVzlom() {
                 MrimProtocolDomain = (char*)DEFAULT_DOMAIN;
                 MrimAvatarsDomain = (char*)DEFAULT_AVATAR_DOMAIN;
                 // юзера уведомляем
-                MessageBoxA(nullptr, "Похоже, вы установили инджектор ручным способом. Отредактируйте параметры на соответствующие вашим в Редакторе Реестра по адресу HKCU/SOFTWARE/Renaissance", "Renaissance Patch", MB_OK | MB_ICONINFORMATION);
+                MessageBoxA(NULL, "Похоже, вы установили инджектор ручным способом. Отредактируйте параметры на соответствующие вашим в Редакторе Реестра по адресу HKCU/SOFTWARE/Renaissance", "Renaissance Patch", MB_OK | MB_ICONINFORMATION);
             }
             memset(buf, 0, sizeof(buf));
 
@@ -128,7 +128,7 @@ DWORD WINAPI mainHakVzlom() {
                 if (FirstTime == 1) {
                     FirstTime = 0;
                     RegSetValueExW(hKey, L"FirstTime", 0, REG_DWORD, reinterpret_cast<const BYTE*>(&FirstTime), sizeof(FirstTime));
-                    MessageBoxA(nullptr, "Если вы видите это сообщение - поздравляем, патч сработал!\n\nНастроить его можно с помощью Renaissance Patcher.", "Renaissance Patch", MB_OK | MB_ICONINFORMATION);
+                    MessageBoxA(NULL, "Если вы видите это сообщение - поздравляем, патч сработал!\n\nНастроить его можно с помощью Renaissance Patcher.", "Renaissance Patch", MB_OK | MB_ICONINFORMATION);
                 }
             }
 
